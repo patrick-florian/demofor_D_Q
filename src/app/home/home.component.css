@@ -1,0 +1,14 @@
+.card-body {
+    background-color: #3867d6;
+    color: #ffffff;
+}
+
+.btn-custom-card {
+    background-color: #8854d0;
+    color: #ffffff;
+    border: solid 2px #ffffff;
+}
+
+.btn-custom-card:hover {
+    background-color: #20bf6b;
+}

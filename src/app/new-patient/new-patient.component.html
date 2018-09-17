@@ -1,0 +1,231 @@
+<div class="container">
+ 
+  <!-- Reactive Form -->
+  <div class="row" *ngIf="!dummyLogin">
+
+    <div class="col-md-12">
+
+      <br/>
+      <h3>
+        To login please use <kbd>admin</kbd> for the username to see promise validation in action, the password is anything as long as
+        it's filled in. Didn't have time to code in a login system.
+      </h3>
+      <hr>
+
+      <form [formGroup]="form" (ngSubmit)="login()">
+
+        <!-- Coded this in but im not using it -->
+        <div *ngIf="form.errors" class="alert alert-danger">
+          The username or password is invalid.
+          Note this is set in the controller intentionally as a demo
+        </div>
+        
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+          formControlName="username"
+          label="username"
+          type="text"
+          class="form-control"
+          >
+      
+          <div *ngIf="username.pending">
+              <div class="fa-3x">
+                  <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+          </div>
+      
+          <div *ngIf="username.touched && username.invalid" class="alert alert-danger">
+            <div *ngIf="username.errors.required">Username is required</div>
+            <div *ngIf="username.errors.cannotContainSpace">Username cannot have any spaces</div>
+            <div *ngIf="username.errors.shouldBeUnique">Username must be admin</div>
+          </div>
+
+        </div>
+      
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input
+            formControlName="password" 
+            label="password"
+            type="text"
+            class="form-control"
+            >
+        </div>
+      
+        <button [disabled]="form.invalid === true" class="btn btn-primary">Login</button>
+      
+      </form>
+
+    </div>
+
+  </div>
+
+  <!-- Template driven form -->
+  <div class="row" *ngIf="dummyLogin">
+
+      <div class="col-md-12">
+  
+        <h2>The previous form was a reactive form, this is a template driven form</h2>
+
+        <form #f="ngForm" (ngSubmit)="submitCF(f)">
+
+            <div ngModelGroup="contact" #contact="ngModelGroup">
+    
+              <!-- This is validation for a form group not using that here -->
+              <!-- <div class="alert alert-danger" *ngIf="!contact.untouched && !contact.valid">
+                Contact portion invalid 
+              </div> -->
+    
+              <div class="form-group">
+                  <label for="firstName">Patient First Name</label>
+                  
+                  <input 
+                  required 
+                  minlength="4" 
+                  maxlength="10" 
+                  ngModel 
+                  name="firstName" 
+                  id="firstName" 
+                  #firstName="ngModel" 
+                  (change)="log(firstName)" 
+                  class="form-control" 
+                  type="text">
+        
+                  <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">
+                    <div *ngIf="firstName.errors.required">
+                      First name is required
+                    </div>
+                    <div *ngIf="firstName.errors.minlength">
+                      First name should be at least {{ firstName.errors.minlength.requiredLength }} charaters long
+                    </div>
+                  </div>
+        
+                </div>
+    
+            </div>
+    
+            <div class="form-group">
+    
+                <label for="reason">Reason For Users Visit</label>
+          
+                <input 
+                required 
+                minlength="20" 
+                maxlength="40" 
+                ngModel 
+                name="reason" 
+                id="reason" 
+                #reason="ngModel" 
+                (change)="log(reason)" 
+                class="form-control" 
+                type="text">
+
+                <div class="alert alert-danger" *ngIf="reason.touched && !reason.valid">
+                    <div *ngIf="reason.errors.required">
+                      Users visit reason is required
+                    </div>
+                    <div *ngIf="reason.errors.minlength">
+                      Patients reason for visit should be at least {{ reason.errors.minlength.requiredLength }} charaters long
+                    </div>
+                </div>
+
+            </div>
+    
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <textarea ngModel name="comment" id="comment" class="form-control" col="30" rows="10" ></textarea>
+            </div>
+    
+            <div class="checkbox">
+              <label for="">
+                <input type="checkbox" ngModel name="isSubscribed"> Patient requires immediate medical attention?
+              </label>
+            </div>
+    
+            <div class="form-group">
+              <label for="contactMethod">Contact Method</label>
+              <!-- Add multiple attribute to make multiple selectable  -->
+              <select #contactMethod="ngModel" required ngModel name="contactMethod" id="contactMethod" class="form-control">
+                <option *ngFor="let method of contactMethods" [value]="method.id">{{ method.method }}</option>
+              </select>
+
+              <!-- No need for children errors since only required is needed -->
+              <div class="alert alert-danger" *ngIf="contactMethod.touched && !contactMethod.valid">
+                  Contact method is required
+              </div>
+
+            </div>
+    
+            <div *ngFor="let time of contactTimes" class="radio">
+              <label>
+                <input ngModel type="radio" name="contactTime" [value]="time.id">
+                {{ time.time }}
+              </label>
+            </div>
+
+            <hr/>
+
+            <h4>Realtime JSON results of this form</h4>
+            <h6>Once everything is filled in correctly the save button below will no longer be disabled</h6>
+
+            <p>
+              {{ f.value | json }}
+            </p>
+
+            <div
+            class="alert"
+            [ngClass]="{
+              'alert-success': f.valid,
+              'alert-danger': !f.valid
+            }"
+            >
+              Form validation passed & ready to submit? {{ f.valid }}
+            </div>
+    
+            <button type="button" data-toggle="modal" data-target="#saved" class="btn btn-primary btn-block" [disabled]="!f.valid" >Save</button>
+
+            <br/>
+
+            <!-- Modal Normally i wouldnt put it inside the form tag but im in a rush on my *NOTE:TODO -->
+            <div id="saved" class="modal fade">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>See what you entered below:</p>
+                    <ul>
+                      <li *ngIf="firstName.touched && !firstName.valid"><kbd>First Name</kbd> - {{ f.value.contact.firstName | json }}</li>
+                      <li><kbd>Reason</kbd> - {{ f.value.reason | json }}</li>
+                      <li [ngSwitch]="f.value.contactMethod">
+                        <kbd>Method Of Contact</kbd> -
+                        <span *ngSwitchCase="1">Phone</span>
+                        <span *ngSwitchCase="2">Email</span>
+                        <span *ngSwitchCase="3">Text</span>
+                        <span *ngSwitchCase="4">Carrier Pidgeon</span>
+                      </li>
+                      <li [ngSwitch]="f.value.contactTime">
+                          <kbd>Best time to contact</kbd> -
+                          <span *ngSwitchCase="1">AM</span>
+                          <span *ngSwitchCase="2">PM</span>
+                          <span *ngSwitchCase="3">Never</span>
+                          <span *ngSwitchDefault>None Selected</span>
+                        </li>
+                      <li [ngSwitch]="f.value.isSubscribed">
+                          <kbd>Requires immediate medical attention?</kbd> -
+                          <span *ngSwitchCase="true">Yes</span>
+                          <span *ngSwitchCase="false">No</span>
+                      </li>
+                      <li><kbd>Comment</kbd> - {{ f.value.comment | json }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+          </form>
+  
+      </div>
+  
+    </div>
+
+</div>

@@ -1,0 +1,60 @@
+<div class="container-fluid">
+ 
+    <div class="row">
+  
+      <div class="col-md-12">
+
+        <br/>
+
+        <h2 class="text-center"> <i class="fas fa-medkit"></i> Nurses</h2>
+
+        <button 
+        (click)="postNurse()"
+        class="btn btn-success btn-sm">
+        <i class="fas fa-plus-square"></i> Add New Nurse
+        </button>
+
+        <hr>
+
+          <table class="table table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">ID#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Update</th>
+                  <th scope="col">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr *ngFor="let nurse of nurses" >
+                  <th scope="row">{{ nurse.id }}</th>
+                  <td>{{ nurse.name }}</td>
+                  <td>{{ nurse.username }}</td>
+                  <td>{{ nurse.email }}</td>
+                  <td>
+                    <button 
+                      (click)="updateNurse(nurse)"
+                      class="btn btn-primary btn-sm">
+                      Update
+                    </button>
+                  </td>
+                  <td>
+                    <button 
+                    (click)="deleteNurse(nurse)"
+                    class="btn btn-danger btn-sm">
+                    Delete
+                    </button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+
+      </div>
+
+    </div>
+
+  </div>
