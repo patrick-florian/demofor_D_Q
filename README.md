@@ -8,7 +8,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 UPDATE: 9/17/18 - It's about 11:30pm I can't finish this all in time will continue tomorrow so it'll be ready for Tuesday
 
- >>> A Demo for a hospital :) <<<
+A Demo for a hospital :)
       ___           ___           ___     
      /\  \         /\  \         /\__\    
      \:\  \       /::\  \       /:/  /    
